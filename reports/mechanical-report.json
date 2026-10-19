@@ -1,0 +1,209 @@
+{
+  "spec": "Sensor_Gateway_Enclosure",
+  "provenance": {
+    "kind": "manual_sketch_transcription",
+    "note": "Hand-transcribed dimensions from a paper napkin sketch. No photograph, OCR or vendor drawing is included, and nothing here is a manufacturability guarantee."
+  },
+  "parts": {
+    "base": {
+      "kind": "base",
+      "triangles": 2608,
+      "vertices": 1304,
+      "topology": {
+        "edges": 3912,
+        "boundary_edges": 0,
+        "nonmanifold_edges": 0,
+        "duplicate_directed_edges": 0,
+        "orientation_consistent": true,
+        "degenerate_triangles": 0,
+        "watertight": true
+      },
+      "geometry": {
+        "signed_volume_mm3": 42039.806,
+        "volume_mm3": 42039.806,
+        "bbox_min_mm": [
+          -48.0,
+          -33.0,
+          0.0
+        ],
+        "bbox_max_mm": [
+          48.0,
+          33.0,
+          34.0
+        ],
+        "bbox_size_mm": [
+          96.0,
+          66.0,
+          34.0
+        ]
+      },
+      "checks": [
+        {
+          "id": "watertight",
+          "pass": true,
+          "detail": "boundary=0, nonmanifold=0, degenerate=0"
+        },
+        {
+          "id": "positive_volume",
+          "pass": true,
+          "detail": "signed volume 42039.806 mm3"
+        },
+        {
+          "id": "bounding_box",
+          "pass": true,
+          "detail": "[np.float64(96.0), np.float64(66.0), np.float64(34.0)] vs expected [96.0, 66.0, 34.0]"
+        },
+        {
+          "id": "wall_thickness_pX_wall",
+          "pass": true,
+          "detail": "measured 2.4 mm, design 2.4 mm"
+        },
+        {
+          "id": "wall_thickness_mX_wall",
+          "pass": true,
+          "detail": "measured 2.4 mm, design 2.4 mm"
+        },
+        {
+          "id": "wall_thickness_pY_wall",
+          "pass": true,
+          "detail": "measured 2.4 mm, design 2.4 mm"
+        },
+        {
+          "id": "wall_thickness_mY_wall",
+          "pass": true,
+          "detail": "measured 2.4 mm, design 2.4 mm"
+        },
+        {
+          "id": "port_penetrates_wall",
+          "pass": true,
+          "detail": "first hit at 68.6 mm; opening 10.0x4.4 mm"
+        },
+        {
+          "id": "boss_hole_present",
+          "pass": true,
+          "detail": "first hit 10.0 mm below the rim"
+        },
+        {
+          "id": "boss_ring_material",
+          "pass": true,
+          "detail": "ring hit at 2.0 mm"
+        }
+      ],
+      "passed": true,
+      "file": "base.stl",
+      "bytes": 130484
+    },
+    "lid": {
+      "kind": "lid",
+      "triangles": 3800,
+      "vertices": 1896,
+      "topology": {
+        "edges": 5700,
+        "boundary_edges": 0,
+        "nonmanifold_edges": 0,
+        "duplicate_directed_edges": 0,
+        "orientation_consistent": true,
+        "degenerate_triangles": 0,
+        "watertight": true
+      },
+      "geometry": {
+        "signed_volume_mm3": 24836.412,
+        "volume_mm3": 24836.412,
+        "bbox_min_mm": [
+          -48.0,
+          -33.0,
+          -3.0
+        ],
+        "bbox_max_mm": [
+          48.0,
+          33.0,
+          4.0
+        ],
+        "bbox_size_mm": [
+          96.0,
+          66.0,
+          7.0
+        ]
+      },
+      "checks": [
+        {
+          "id": "watertight",
+          "pass": true,
+          "detail": "boundary=0, nonmanifold=0, degenerate=0"
+        },
+        {
+          "id": "positive_volume",
+          "pass": true,
+          "detail": "signed volume 24836.412 mm3"
+        },
+        {
+          "id": "bounding_box",
+          "pass": true,
+          "detail": "[np.float64(96.0), np.float64(66.0), np.float64(7.0)] vs expected [96.0, 66.0, 7.0]"
+        },
+        {
+          "id": "screw_hole_open",
+          "pass": true,
+          "detail": "hits through a screw hole: []"
+        }
+      ],
+      "passed": true,
+      "file": "lid_bme280.stl",
+      "bytes": 190084
+    },
+    "assembly": {
+      "kind": "assembly",
+      "triangles": 6136,
+      "vertices": 3064,
+      "topology": {
+        "edges": 9204,
+        "boundary_edges": 0,
+        "nonmanifold_edges": 0,
+        "duplicate_directed_edges": 0,
+        "orientation_consistent": true,
+        "degenerate_triangles": 0,
+        "watertight": true
+      },
+      "geometry": {
+        "signed_volume_mm3": 66876.218,
+        "volume_mm3": 66876.218,
+        "bbox_min_mm": [
+          -48.0,
+          -33.0,
+          0.0
+        ],
+        "bbox_max_mm": [
+          48.0,
+          33.0,
+          38.0
+        ],
+        "bbox_size_mm": [
+          96.0,
+          66.0,
+          38.0
+        ]
+      },
+      "checks": [
+        {
+          "id": "watertight",
+          "pass": true,
+          "detail": "boundary=0, nonmanifold=0, degenerate=0"
+        },
+        {
+          "id": "positive_volume",
+          "pass": true,
+          "detail": "signed volume 66876.218 mm3"
+        },
+        {
+          "id": "bounding_box",
+          "pass": true,
+          "detail": "[np.float64(96.0), np.float64(66.0), np.float64(38.0)] vs expected [96.0, 66.0, 38.0]"
+        }
+      ],
+      "passed": true,
+      "file": "assembly_bme280.stl",
+      "bytes": 306884
+    }
+  },
+  "passed": true
+}

@@ -1,0 +1,39 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy pytest
+      - name: Referee tests
+        run: python -m pytest -q
+      - name: Mesh referee on committed STL
+        run: python mesh_checks.py --spec specs/sensor_gateway.json
+      - name: Viewer is reproducible
+        run: python tools/build_viewer.py --check
+      - name: Verification report
+        run: python tools/verify.py
+      - name: Package release
+        run: python tools/package_release.py
+      - name: Upload evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification
+          path: |
+            reports/mechanical-report.json
+            reports/verification.json
+            dist/*.zip
+            dist/SHA256SUMS-*.txt

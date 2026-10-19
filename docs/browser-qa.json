@@ -1,0 +1,37 @@
+{
+  "viewer": "enclosure_viewer.html",
+  "viewer_sha256": "ae2635bd2a832da84d67ded0abd18d43e5fd8de4d830aabdb37cac2fac4ea5ce",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "webgl": {
+    "ready": true,
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "three": "128"
+  },
+  "checks": 20,
+  "gates": {
+    "spec": "spec gates · all pass",
+    "mesh": "mesh · watertight"
+  },
+  "interactions": {
+    "exploded": {
+      "preset": "vl53l1x",
+      "explode": 55
+    },
+    "section": {
+      "section": 16
+    },
+    "wire": {
+      "wire": true
+    }
+  },
+  "consoleErrors": [],
+  "screenshots": [
+    "preview.png",
+    "preview-exploded.png",
+    "preview-section.png",
+    "preview-wireframe.png"
+  ]
+}

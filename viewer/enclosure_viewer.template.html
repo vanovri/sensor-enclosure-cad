@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Parametric sensor enclosure — CAD referee viewer</title>
+<meta name="description" content="Standalone viewer for a parametric enclosure generated from a hand-transcribed sketch. Design artifact, not a print guarantee." />
+<style>
+  :root{
+    --bg:#070b10; --panel:rgba(11,18,26,.9); --ink:#e9f0f7; --muted:#8b9bad;
+    --accent:#5eead4; --amber:#fbbf24; --ok:#4ade80; --bad:#f87171; --line:rgba(148,163,184,.16);
+    --mono:"Cascadia Code","SFMono-Regular",Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--ink);overflow:hidden;font-family:"Segoe UI Variable","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  #scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+  #scene.dragging{cursor:grabbing}
+  .vignette{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at 50% 42%,transparent 46%,rgba(2,5,9,.78) 100%)}
+  .top{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:16px 20px;pointer-events:none}
+  .panel{background:var(--panel);backdrop-filter:blur(14px) saturate(1.1);border:1px solid var(--line);border-radius:14px;box-shadow:0 20px 55px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.04);padding:14px 16px;pointer-events:auto}
+  .eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  h1{font-size:18px;font-weight:650;letter-spacing:-.01em;margin-top:3px}
+  h1 span{color:var(--muted);font-weight:400}
+  .badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .badge{font-size:10px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;border:1px solid rgba(148,163,184,.26);background:rgba(15,23,42,.7);padding:3px 8px;border-radius:999px;color:#b9c9d9}
+  .badge.warn{color:#fcd34d;border-color:rgba(251,191,36,.4);background:rgba(120,53,15,.28)}
+  .badge.ok{color:var(--ok);border-color:rgba(74,222,128,.36);background:rgba(20,83,45,.3)}
+  .dims{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+  .dim{font-family:var(--mono);font-size:10.5px;color:#c7d5e3;border:1px solid rgba(148,163,184,.2);border-radius:6px;padding:3px 7px;background:rgba(30,41,59,.45)}
+  .checks{width:min(330px,42vw)}
+  .check-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .check-count{font-size:11px;color:var(--muted)}
+  .check-list{margin-top:8px;display:flex;flex-direction:column;gap:4px;max-height:34vh;overflow:auto}
+  .check{display:flex;justify-content:space-between;gap:10px;font-size:10.5px;color:#b9c8d6;padding:2px 0;border-bottom:1px dashed rgba(148,163,184,.1)}
+  .check b{font-family:var(--mono);font-weight:600;color:#d9e6f1;font-size:10px}
+  .pill{font-size:9px;font-weight:800;letter-spacing:.08em;border-radius:999px;padding:1px 6px}
+  .pill.ok{color:#052e16;background:var(--ok)}
+  .pill.bad{color:#450a0a;background:var(--bad)}
+  #dock{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);width:min(1020px,95vw);z-index:12;display:flex;flex-direction:column;gap:10px}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .label{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  button{font:inherit;font-size:11.5px;font-weight:600;color:#cbd8e5;background:rgba(30,41,59,.8);border:1px solid rgba(148,163,184,.28);border-radius:8px;padding:6px 11px;cursor:pointer;transition:border-color .15s,color .15s,background .15s}
+  button:hover{border-color:rgba(94,234,212,.6);color:#fff}
+  button[aria-pressed="true"],button.active{background:rgba(13,148,136,.32);border-color:var(--accent);color:#fff}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  input[type="range"]{accent-color:#5eead4;cursor:pointer;width:130px}
+  .slider{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
+  .slider b{font-family:var(--mono);font-size:10.5px;color:#d9e6f1;min-width:42px;text-align:right}
+  .hint{position:fixed;left:20px;bottom:118px;z-index:11;font-size:10.5px;color:var(--muted);max-width:270px;line-height:1.5;pointer-events:none}
+  #fallback{position:fixed;inset:0;z-index:40;display:none;place-items:center;background:#070b10;padding:22px;overflow:auto}
+  #fallback .card{max-width:680px;width:100%;border:1px solid rgba(148,163,184,.22);border-radius:16px;padding:20px;background:#0b141d}
+  #fallback h2{font-size:17px;margin-bottom:8px}
+  #fallback p{color:var(--muted);font-size:12.5px;line-height:1.55;margin-bottom:8px}
+  #fallback ul{color:#b9c8d6;font-size:12px;line-height:1.7;padding-left:18px}
+  @media (max-width:900px){
+    .checks{display:none}
+    .hint{display:none}
+    h1{font-size:15px}
+    .top{flex-direction:column;gap:8px}
+  }
+</style>
+</head>
+<body>
+<canvas id="scene" aria-label="Rotatable 3D view of a parametric sensor enclosure"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+
+<div class="top">
+  <div class="panel">
+    <div class="eyebrow">OpenSCAD → watertight STL → referee</div>
+    <h1>Sensor gateway enclosure <span>— hand-transcribed sketch</span></h1>
+    <div class="badges">
+      <span class="badge warn" id="provenance">manual sketch · not a print guarantee</span>
+      <span class="badge ok" id="gate">spec gates · pending</span>
+      <span class="badge" id="mesh-gate">mesh · pending</span>
+    </div>
+    <div class="dims">
+      <span class="dim" id="dim-outer">—</span>
+      <span class="dim" id="dim-wall">—</span>
+      <span class="dim" id="dim-boss">—</span>
+      <span class="dim" id="dim-clearance">—</span>
+    </div>
+  </div>
+
+  <div class="panel checks">
+    <div class="check-head">
+      <h2 class="eyebrow" style="font-size:10px">Referee checks</h2>
+      <span class="check-count" id="check-count">—</span>
+    </div>
+    <div class="check-list" id="check-list"></div>
+  </div>
+</div>
+
+<div id="dock">
+  <div class="panel row">
+    <div class="group">
+      <span class="label">Lid preset</span>
+      <button data-preset="bme280" aria-pressed="true">BME280</button>
+      <button data-preset="vl53l1x" aria-pressed="false">VL53L1X</button>
+      <button id="wire" aria-pressed="false">Wireframe</button>
+      <button id="reset">Reset view</button>
+    </div>
+    <div class="group">
+      <div class="slider"><span class="label">Explode</span><input id="explode" type="range" min="0" max="80" value="0" /><b id="explode-val">0 mm</b></div>
+      <div class="slider"><span class="label">Section</span><input id="section" type="range" min="0" max="40" value="40" /><b id="section-val">off</b></div>
+    </div>
+  </div>
+</div>
+
+<div class="hint">Drag to orbit · wheel to zoom · the section slider cuts the model to show wall, bosses and the module pocket.</div>
+
+<div id="fallback">
+  <div class="card">
+    <h2>3D view unavailable</h2>
+    <p id="fallback-reason">WebGL could not start. The same design checks are listed below; no geometry is estimated.</p>
+    <ul id="fallback-list"></ul>
+  </div>
+</div>
+
+<script id="enclosure-data" type="application/json">__ENCLOSURE_PAYLOAD__</script>
+<!-- INLINE_THREE -->
+<script>
+(function () {
+  "use strict";
+
+  var payload;
+  try {
+    payload = JSON.parse(document.getElementById("enclosure-data").textContent);
+  } catch (err) {
+    document.getElementById("fallback-reason").textContent = "Embedded payload is invalid JSON: " + err.message;
+    document.getElementById("fallback").style.display = "grid";
+    return;
+  }
+
+  var spec = payload.spec;
+  var parts = payload.parts;
+  var checks = payload.checks || [];
+  var state = { ready: false, preset: "bme280", explode: 0, section: 40, wire: false, three: null, renderer: null, checks: checks.length };
+  window.__ENCLOSURE_STATE__ = state;
+
+  function fmt(value, digits) {
+    return Number(value).toFixed(digits).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  function setText(id, text) { document.getElementById(id).textContent = text; }
+  setText("dim-outer", spec.outer_width + " × " + spec.outer_depth + " × " + spec.outer_height + " mm");
+  setText("dim-wall", "wall " + spec.wall_thickness + " mm");
+  setText("dim-boss", "M3 boss ⌀" + spec.boss_diameter + " / hole ⌀" + spec.hole_diameter);
+  setText("dim-clearance", "lid clearance " + spec.lid_clearance + " mm");
+  setText("provenance", (payload.provenance.kind || "manual").replace(/_/g, " ").toLowerCase() + " · not a print guarantee");
+
+  var failed = checks.filter(function (check) { return !check.pass; });
+  setText("gate", "spec gates · " + (failed.length ? failed.length + " failed" : "all pass"));
+  document.getElementById("gate").className = "badge " + (failed.length ? "warn" : "ok");
+  var meshPassed = payload.mesh && payload.mesh.passed;
+  setText("mesh-gate", "mesh · " + (meshPassed ? "watertight" : "check failed"));
+  document.getElementById("mesh-gate").className = "badge " + (meshPassed ? "ok" : "warn");
+
+  var list = document.getElementById("check-list");
+  checks.forEach(function (check) {
+    var row = document.createElement("div");
+    row.className = "check";
+    var name = document.createElement("span");
+    name.textContent = check.id.replace(/_/g, " ");
+    var value = document.createElement("b");
+    value.textContent = String(check.value) + (check.rule === "range" ? " ↕" : check.rule === "min" ? " ≥" : " ≤");
+    var pill = document.createElement("span");
+    pill.className = "pill " + (check.pass ? "ok" : "bad");
+    pill.textContent = check.pass ? "PASS" : "FAIL";
+    row.appendChild(name);
+    row.appendChild(value);
+    row.appendChild(pill);
+    list.appendChild(row);
+  });
+  setText("check-count", checks.filter(function (c) { return c.pass; }).length + "/" + checks.length + " gates · " +
+    (payload.mesh ? payload.mesh.triangles : 0) + " tris");
+
+  var THREE = window.THREE;
+  if (!THREE) {
+    document.getElementById("fallback").style.display = "grid";
+    return;
+  }
+  state.three = THREE.REVISION;
+
+  var renderer, scene, camera, root, baseMesh, lidMesh, clipPlane, grid;
+  var materials = {};
+  var orbit = { yaw: 0.72, pitch: 0.52, distance: 270, dragging: false, moved: false };
+  var target = new THREE.Vector3(0, 18, 0);
+  var last = performance.now();
+  var clock = 0;
+
+  function makeGeometry(part) {
+    var geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(part.positions, 3));
+    geometry.setIndex(part.indices);
+    geometry.computeVertexNormals();
+    return geometry;
+  }
+
+  function init() {
+    renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("scene"), antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight, false);
+    renderer.setClearColor(0x070b10, 1);
+    renderer.localClippingEnabled = true;
+    var gl = renderer.getContext();
+    var debug = gl.getExtension("WEBGL_debug_renderer_info");
+    state.renderer = debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : "webgl";
+
+    scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0x070b10, 420, 900);
+
+    camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 1, 3000);
+    camera.position.set(210, 170, 260);
+
+    scene.add(new THREE.HemisphereLight(0xcfe8ff, 0x0a141c, 0.72));
+    var key = new THREE.DirectionalLight(0xffffff, 0.95);
+    key.position.set(160, 240, 180);
+    scene.add(key);
+    var rim = new THREE.DirectionalLight(0x5eead4, 0.5);
+    rim.position.set(-200, 120, -160);
+    scene.add(rim);
+    scene.add(new THREE.AmbientLight(0x9fb4c6, 0.22));
+
+    root = new THREE.Group();
+    root.position.set(0, -18, 0);
+    scene.add(root);
+
+    clipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 40);
+
+    var baseMaterial = new THREE.MeshStandardMaterial({
+      color: 0x2f7f8a, roughness: 0.58, metalness: 0.08, side: THREE.DoubleSide,
+      clippingPlanes: [], clipShadows: true
+    });
+    var lidMaterial = new THREE.MeshStandardMaterial({
+      color: 0xd99a4a, roughness: 0.55, metalness: 0.06, side: THREE.DoubleSide,
+      clippingPlanes: [], clipShadows: true
+    });
+    var sensorMaterial = new THREE.MeshStandardMaterial({
+      color: 0x5eead4, roughness: 0.45, metalness: 0.2, side: THREE.DoubleSide,
+      clippingPlanes: []
+    });
+    materials = { base: baseMaterial, lid: lidMaterial, sensor: sensorMaterial };
+
+    baseMesh = new THREE.Mesh(makeGeometry(parts.base), baseMaterial);
+    root.add(baseMesh);
+
+    lidMesh = new THREE.Mesh(makeGeometry(parts["lid_" + state.preset]), lidMaterial);
+    lidMesh.position.y = spec.outer_height;
+    root.add(lidMesh);
+
+    // Simple PCB block for context; dimensions are illustrative, not a board model.
+    var pcb = new THREE.Mesh(new THREE.BoxGeometry(70, 1.6, 46), sensorMaterial.clone());
+    pcb.material.color.set(0x1f6f5f);
+    pcb.material.opacity = 0.9;
+    pcb.material.transparent = false;
+    pcb.position.set(0, 12, 0);
+    pcb.visible = false;
+    root.add(pcb);
+    state.pcb = pcb;
+
+    var floor = new THREE.Mesh(
+      new THREE.CircleGeometry(150, 64),
+      new THREE.MeshBasicMaterial({ color: 0x0a141c, transparent: true, opacity: 0.55 })
+    );
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -0.2;
+    scene.add(floor);
+    grid = new THREE.GridHelper(300, 30, 0x16323c, 0x0d1d26);
+    grid.position.y = 0;
+    grid.material.transparent = true;
+    grid.material.opacity = 0.45;
+    scene.add(grid);
+
+    bind();
+    applySection();
+    state.ready = true;
+    animate();
+  }
+
+  function applySection() {
+    var cut = state.section;
+    var active = cut < 40;
+    var plane = active ? [clipPlane] : [];
+    clipPlane.constant = cut;
+    Object.keys(materials).forEach(function (key) {
+      var material = materials[key];
+      material.clippingPlanes = active ? [clipPlane] : [];
+      material.side = THREE.DoubleSide;
+      material.needsUpdate = true;
+    });
+    if (state.pcb) {
+      state.pcb.material.clippingPlanes = active ? [clipPlane] : [];
+      state.pcb.material.needsUpdate = true;
+    }
+    setText("section-val", active ? cut + " mm" : "off");
+    grid.visible = active;
+  }
+
+  function setPreset(preset) {
+    state.preset = preset;
+    lidMesh.geometry.dispose();
+    lidMesh.geometry = makeGeometry(parts["lid_" + preset]);
+    document.querySelectorAll("[data-preset]").forEach(function (button) {
+      button.setAttribute("aria-pressed", button.dataset.preset === preset ? "true" : "false");
+    });
+  }
+
+  function setExplode(value) {
+    state.explode = Number(value);
+    lidMesh.position.y = spec.outer_height + value;
+    state.pcb.visible = value > 4;
+    setText("explode-val", value + " mm");
+  }
+
+  function setWire(on) {
+    state.wire = Boolean(on);
+    [materials.base, materials.lid].forEach(function (material) {
+      material.wireframe = on;
+      material.needsUpdate = true;
+    });
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    var now = performance.now();
+    var delta = Math.min(0.1, (now - last) / 1000);
+    last = now;
+    var radius = orbit.distance;
+    camera.position.set(
+      target.x + radius * Math.cos(orbit.pitch) * Math.sin(orbit.yaw),
+      target.y + radius * Math.sin(orbit.pitch),
+      target.z + radius * Math.cos(orbit.pitch) * Math.cos(orbit.yaw)
+    );
+    camera.lookAt(target);
+    renderer.render(scene, camera);
+    clock += 1;
+    if (clock % 30 === 0) state.frames = clock;
+  }
+
+  function bind() {
+    var canvas = document.getElementById("scene");
+    function down(event) {
+      orbit.dragging = true;
+      orbit.moved = false;
+      orbit.sx = event.clientX;
+      orbit.sy = event.clientY;
+      orbit.yaw0 = orbit.yaw;
+      orbit.pitch0 = orbit.pitch;
+      canvas.classList.add("dragging");
+      canvas.setPointerCapture && canvas.setPointerCapture(event.pointerId);
+    }
+    function move(event) {
+      if (!orbit.dragging) return;
+      var dx = (event.clientX - orbit.sx) / window.innerWidth;
+      var dy = (event.clientY - orbit.sy) / window.innerHeight;
+      if (Math.abs(dx) > 0.003 || Math.abs(dy) > 0.003) orbit.moved = true;
+      orbit.yaw = orbit.yaw0 - dx * 3.2;
+      orbit.pitch = Math.max(-0.2, Math.min(1.35, orbit.pitch0 + dy * 2.0));
+    }
+    function up() { orbit.dragging = false; canvas.classList.remove("dragging"); }
+    canvas.addEventListener("pointerdown", down);
+    canvas.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    canvas.addEventListener("wheel", function (event) {
+      event.preventDefault();
+      orbit.distance = Math.max(120, Math.min(520, orbit.distance * (1 + Math.sign(event.deltaY) * 0.12)));
+    }, { passive: false });
+
+    document.querySelectorAll("[data-preset]").forEach(function (button) {
+      button.addEventListener("click", function () { setPreset(button.dataset.preset); });
+    });
+    document.getElementById("wire").addEventListener("click", function (event) {
+      var next = event.currentTarget.getAttribute("aria-pressed") !== "true";
+      event.currentTarget.setAttribute("aria-pressed", next ? "true" : "false");
+      setWire(next);
+    });
+    document.getElementById("explode").addEventListener("input", function (event) {
+      setExplode(Number(event.target.value));
+    });
+    document.getElementById("section").addEventListener("input", function (event) {
+      state.section = Number(event.target.value);
+      applySection();
+    });
+    document.getElementById("reset").addEventListener("click", function () {
+      orbit.yaw = 0.72; orbit.pitch = 0.52; orbit.distance = 270;
+      document.getElementById("explode").value = "0";
+      document.getElementById("section").value = "40";
+      state.section = 40;
+      setExplode(0);
+      applySection();
+      setPreset("bme280");
+    });
+    window.addEventListener("resize", function () {
+      renderer.setSize(window.innerWidth, window.innerHeight, false);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+    });
+  }
+
+  try {
+    init();
+  } catch (err) {
+    state.ready = false;
+    state.error = String(err && err.message || err);
+    document.getElementById("fallback-reason").textContent = "WebGL could not start: " + state.error;
+    var fallback = document.getElementById("fallback-list");
+    checks.forEach(function (check) {
+      var item = document.createElement("li");
+      item.textContent = check.id + " · " + check.value + " · " + (check.pass ? "pass" : "fail");
+      fallback.appendChild(item);
+    });
+    document.getElementById("fallback").style.display = "grid";
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+{
+  "spec": "Sensor_Gateway_Enclosure",
+  "provenance": {
+    "kind": "manual_sketch_transcription",
+    "note": "Hand-transcribed dimensions from a paper napkin sketch. No photograph, OCR or vendor drawing is included, and nothing here is a manufacturability guarantee."
+  },
+  "checks": [
+    {
+      "id": "wall_thickness",
+      "value": 2.4,
+      "limit": 2.0,
+      "rule": "min",
+      "pass": true,
+      "note": "FDM perimeter wall thickness"
+    },
+    {
+      "id": "floor_thickness",
+      "value": 2.4,
+      "limit": 2.0,
+      "rule": "min",
+      "pass": true,
+      "note": "Load-bearing floor thickness"
+    },
+    {
+      "id": "lid_thickness",
+      "value": 4.0,
+      "limit": 2.0,
+      "rule": "min",
+      "pass": true,
+      "note": "Lid plate thickness"
+    },
+    {
+      "id": "boss_ring_width",
+      "value": 1.65,
+      "limit": 1.5,
+      "rule": "min",
+      "pass": true,
+      "note": "Material around the heat-set insert"
+    },
+    {
+      "id": "screw_clearance",
+      "value": 0.2,
+      "limit": 0.2,
+      "rule": "min",
+      "pass": true,
+      "note": "Lid through-hole minus screw shank"
+    },
+    {
+      "id": "lid_radial_clearance",
+      "value": 0.3,
+      "limit": [
+        0.2,
+        0.6
+      ],
+      "rule": "range",
+      "pass": true,
+      "note": "Radial lip clearance into the cavity"
+    },
+    {
+      "id": "boss_edge_to_wall",
+      "value": 3.35,
+      "limit": 1.0,
+      "rule": "min",
+      "pass": true,
+      "note": "Boss edge to inner wall"
+    },
+    {
+      "id": "boss_to_wall_center",
+      "value": 5.75,
+      "limit": 2.4,
+      "rule": "min",
+      "pass": true,
+      "note": "Boss edge outside the cavity wall"
+    },
+    {
+      "id": "port_usb_c_margin",
+      "value": 0.6,
+      "limit": 0.3,
+      "rule": "min",
+      "pass": true,
+      "note": "Per-side connector clearance"
+    },
+    {
+      "id": "port_usb_c_edge_margin",
+      "value": 43.0,
+      "limit": 3.0,
+      "rule": "min",
+      "pass": true,
+      "note": "Port opening to enclosure corner"
+    },
+    {
+      "id": "port_usb_c_vertical_margin",
+      "value": 7.8,
+      "limit": 3.0,
+      "rule": "min",
+      "pass": true,
+      "note": "Port opening to floor/rim"
+    },
+    {
+      "id": "mount_bme280_pocket_fit",
+      "value": 6.0,
+      "limit": 1.0,
+      "rule": "min",
+      "pass": true,
+      "note": "Half-opening for the sensor aperture"
+    },
+    {
+      "id": "mount_bme280_hole_diameter",
+      "value": 2.4,
+      "limit": 2.0,
+      "rule": "min",
+      "pass": true,
+      "note": "Self-tapping M2 pilot"
+    },
+    {
+      "id": "mount_bme280_hole_fit",
+      "value": 3.0,
+      "limit": 1.0,
+      "rule": "min",
+      "pass": true,
+      "note": "Edge distance from module edge to mounting hole"
+    },
+    {
+      "id": "mount_vl53l1x_pocket_fit",
+      "value": 4.0,
+      "limit": 1.0,
+      "rule": "min",
+      "pass": true,
+      "note": "Half-opening for the sensor aperture"
+    },
+    {
+      "id": "mount_vl53l1x_hole_diameter",
+      "value": 2.2,
+      "limit": 2.0,
+      "rule": "min",
+      "pass": true,
+      "note": "Self-tapping M2 pilot"
+    },
+    {
+      "id": "mount_vl53l1x_hole_fit",
+      "value": 2.0,
+      "limit": 1.0,
+      "rule": "min",
+      "pass": true,
+      "note": "Edge distance from module edge to mounting hole"
+    },
+    {
+      "id": "lid_lip_thickness",
+      "value": 2.0,
+      "limit": 0.8,
+      "rule": "min",
+      "pass": true,
+      "note": "Printable minimum lip feature"
+    },
+    {
+      "id": "minimum_feature",
+      "value": 2.0,
+      "limit": 0.8,
+      "rule": "min",
+      "pass": true,
+      "note": "Smallest designed feature"
+    },
+    {
+      "id": "corner_radius",
+      "value": 6.0,
+      "limit": 2.4,
+      "rule": "min",
+      "pass": true,
+      "note": "Outer radius at least one wall thick"
+    }
+  ],
+  "failed": []
+}

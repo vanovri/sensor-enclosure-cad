@@ -1,0 +1,90 @@
+{
+  "schema": "ENCLOSURE_SPEC_V1",
+  "provenance": {
+    "kind": "manual_sketch_transcription",
+    "note": "Hand-transcribed dimensions from a paper napkin sketch. No photograph, OCR or vendor drawing is included, and nothing here is a manufacturability guarantee."
+  },
+  "units": "mm",
+  "enclosure": {
+    "name": "Sensor_Gateway_Enclosure",
+    "outer_width": 96.0,
+    "outer_depth": 66.0,
+    "outer_height": 34.0,
+    "wall_thickness": 2.4,
+    "floor_thickness": 2.4,
+    "corner_radius": 6.0,
+    "lid_thickness": 4.0,
+    "lid_lip_height": 3.0,
+    "lid_lip_thickness": 2.0,
+    "lid_clearance": 0.3
+  },
+  "fasteners": {
+    "thread": "M3",
+    "screw_diameter": 3.0,
+    "boss_diameter": 6.5,
+    "hole_diameter": 3.2,
+    "boss_inset": 9.0,
+    "boss_height": 32.0,
+    "hole_depth": 8.0,
+    "counterbore_diameter": 6.0,
+    "counterbore_depth": 2.0
+  },
+  "ports": [
+    {
+      "id": "usb_c",
+      "wall": "front",
+      "connector_width": 8.8,
+      "connector_height": 3.2,
+      "clearance": 0.6,
+      "center_x": 0.0,
+      "center_z": 10.0
+    }
+  ],
+  "windows": [
+    {
+      "id": "oled",
+      "wall": "lid",
+      "width": 26.0,
+      "height": 14.0,
+      "corner_radius": 2.0,
+      "center_x": 0.0,
+      "center_y": 8.0
+    }
+  ],
+  "sensor_mounts": [
+    {
+      "preset": "bme280",
+      "label": "BME280 breakout",
+      "module_width": 20.0,
+      "module_height": 15.0,
+      "opening_width": 12.0,
+      "opening_height": 8.0,
+      "hole_spacing": 14.0,
+      "hole_diameter": 2.4,
+      "pocket_depth": 1.2
+    },
+    {
+      "preset": "vl53l1x",
+      "label": "VL53L1X ToF breakout",
+      "module_width": 13.0,
+      "module_height": 18.0,
+      "opening_width": 8.0,
+      "opening_height": 8.0,
+      "hole_spacing": 9.0,
+      "hole_diameter": 2.2,
+      "pocket_depth": 1.0
+    }
+  ],
+  "minimums": {
+    "wall_thickness": 2.0,
+    "floor_thickness": 2.0,
+    "lid_thickness": 2.0,
+    "boss_ring_width": 1.5,
+    "screw_clearance": 0.2,
+    "lid_clearance_min": 0.2,
+    "lid_clearance_max": 0.6,
+    "boss_wall_margin": 1.0,
+    "port_edge_margin": 3.0,
+    "feature_size": 0.8
+  }
+}

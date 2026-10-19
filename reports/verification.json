@@ -1,0 +1,68 @@
+{
+  "ok": true,
+  "failures": [],
+  "spec": {
+    "name": "Sensor_Gateway_Enclosure",
+    "provenance": {
+      "kind": "manual_sketch_transcription",
+      "note": "Hand-transcribed dimensions from a paper napkin sketch. No photograph, OCR or vendor drawing is included, and nothing here is a manufacturability guarantee."
+    },
+    "gates": 20,
+    "failed": []
+  },
+  "parts": {
+    "base": {
+      "triangles": 2608,
+      "volume_mm3": 42039.806,
+      "bbox_size_mm": [
+        96.0,
+        66.0,
+        34.0
+      ],
+      "watertight": true,
+      "checks": 10,
+      "passed": true
+    },
+    "lid": {
+      "triangles": 3800,
+      "volume_mm3": 24836.412,
+      "bbox_size_mm": [
+        96.0,
+        66.0,
+        7.0
+      ],
+      "watertight": true,
+      "checks": 4,
+      "passed": true
+    },
+    "assembly": {
+      "triangles": 6136,
+      "volume_mm3": 66876.218,
+      "bbox_size_mm": [
+        96.0,
+        66.0,
+        38.0
+      ],
+      "watertight": true,
+      "checks": 3,
+      "passed": true
+    }
+  },
+  "viewer": {
+    "file": "enclosure_viewer.html",
+    "bytes": 860038,
+    "sha256": "ae2635bd2a832da84d67ded0abd18d43e5fd8de4d830aabdb37cac2fac4ea5ce",
+    "three_version": "0.128.0",
+    "three_sha256": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+    "embedded_parts": 3,
+    "external_assets": false,
+    "network_fetch": false
+  },
+  "claims": {
+    "physical_print": false,
+    "strength_or_drop_test": false,
+    "ingress_protection": false,
+    "snap_fit": false,
+    "note": "Spec and mesh checks only. No printed prototype, fit test against a real board or manufacturing review exists."
+  }
+}
