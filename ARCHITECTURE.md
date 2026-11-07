@@ -1,6 +1,6 @@
 # Sensor enclosure CAD architecture
 
-Reviewed against the local working tree on 2026-11-07. Source paths below are relative to this repository.
+Reviewed against the local working tree on 2026-11-08. Source paths below are relative to this repository.
 
 ## System context and data flow
 
@@ -65,3 +65,7 @@ python mesh_checks.py --spec specs/sensor_gateway.json --stl-dir stl --out repor
 ```
 
 The added tests use independently constructed tetrahedra, ray-scale invariance, real mesh CLI reports, and missing-part failure reporting. Fresh STL generation requires OpenSCAD. The checks do not establish real board fit, printability, strength, or ingress protection.
+
+## Source crosscheck, 2026-11-08
+
+The JSON loader currently validates only part of the mechanical schema. mesh_checks performs numerical triangle and ray checks on generated meshes. Source-level and mesh tests do not establish manufacturing fit or real sensor calibration.
