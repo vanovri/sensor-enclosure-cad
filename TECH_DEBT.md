@@ -9,6 +9,7 @@ Location: enclosure_generator.py:27-53.
 The positive-number check accepts bool and does not reject NaN or positive infinity. The focused proposal adds the missing math import and validates required enclosure dimensions. Nested fastener/port/mount fields still need a separately specified schema; this proposal does not claim to validate them.
 
 ```diff
+diff --git a/enclosure_generator.py b/enclosure_generator.py
 --- a/enclosure_generator.py
 +++ b/enclosure_generator.py
 @@ -8,6 +8,7 @@
@@ -42,6 +43,7 @@ Location: mesh_checks.py:112-117.
 Normalizing a zero/non-finite vector can yield NaN and an empty hit list. Reject malformed direction, origin and limit before vectorized intersection math. The entire input guard is included rather than referring to additional unwritten changes.
 
 ```diff
+diff --git a/mesh_checks.py b/mesh_checks.py
 --- a/mesh_checks.py
 +++ b/mesh_checks.py
 @@ -113,7 +113,16 @@
